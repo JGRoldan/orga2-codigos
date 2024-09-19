@@ -1,7 +1,10 @@
 ### Ejecutar codigo
-**`1`**. ```nasm -f elf32 program.nasm -o program.o```
-**`2`**. ```ld -m elf_i386 -o program program.o```
-**`3`**. ```./program```
+**`1`**. ```nasm -f elf32 program.nasm -o program.o```  
+
+**`2`**. ```ld -m elf_i386 -o program program.o```  
+
+**`3`**. ```./program```  
+
 
 ### Definición de Datos
 
