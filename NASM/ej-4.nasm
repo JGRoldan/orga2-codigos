@@ -6,6 +6,10 @@ section .data
     msgGreater db "N1 es mayor que N2",0x0A, 0 			;0x0A = LF (new line)
     msgZero db "El resultado de N3 - N4 es cero",0x0A, 0
 
+    ;length de cadenas
+    msgGreaterLen equ $-msgGreater
+    msgZeroLen equ $-msgZero
+
 section .text
     global _start
 
@@ -22,44 +26,25 @@ _puntoB:
     mov eax, [N3]       ; Cargar N3 en EAX
     sub eax, [N4]       ; Resta eax(=N3) con N4
     cmp eax, 0          ; Comparar N3 con N4
-    je printEqualToZero       ; Si N3 == N4, saltar a printEqualToZero
+    je printEqualToZero ; Si N3 == N4, saltar a printEqualToZero
 
     jmp done
 
 printGreater:
     mov eax, 4             ; sys_write (número de la llamada al sistema)
     mov ebx, 1             ; Descriptor de archivo 1 (salida estándar)
-    mov edi, msgGreater    ; Cargar la dirección de msgGreater en edi (para getStringLength)
-    call getStringLength   ; Llamar a la función para calcular la longitud
-    mov edx, ecx           ; Longitud del mensaje en edx
-    mov ecx, edi           ; Cargar la dirección del mensaje en ecx para sys_write
+    mov ecx, msgGreater    ; Cargar la dirección de msgGreater en edi (para getStringLength)
+    mov edx, msgGreaterLen ; Longitud del mensaje en edx
     int 0x80               ; Llamada al sistema (sys_write)
-    jmp _puntoB            ; Retorna a _puntoB
+    jmp done               ; Retorna a _puntoB
 
 printEqualToZero:
     mov eax, 4             ; sys_write (número de la llamada al sistema)
     mov ebx, 1             ; Descriptor de archivo 1 (salida estándar)
-    mov edi, msgZero       ; Cargar la dirección de msgZero en edi (para getStringLength)
-    call getStringLength   ; Llamar a la función para calcular la longitud
-    mov edx, ecx           ; Longitud del mensaje en edx
-    mov ecx, edi           ; Cargar la dirección del mensaje en ecx para sys_write
+    mov ecx, msgZero       ; Cargar la dirección de msgZero en edi (para getStringLength)
+    mov edx, msgZeroLen    ; Longitud del mensaje en edx
     int 0x80               ; Llamada al sistema (sys_write)
     jmp done               ; Retorna a _puntoB
-
-
-
-; Funcion para calcular la longitud del mensaje
-getStringLength:
-	mov ecx, 0
-
-findNullTerminator:
-        cmp byte [edi + ecx], 0   ; Compara el byte actual con el terminador nulo
-        je doneLength             ; Si encuentra el final, salta a doneLength
-        inc ecx                   ; Incrementa el contador
-        jmp findNullTerminator    ; Repite hasta encontrar el terminador nulo
-
-doneLength:
-        ret                       ; Retorna (la longitud estará en ecx)
 
 done:
     ; Salir del programa
