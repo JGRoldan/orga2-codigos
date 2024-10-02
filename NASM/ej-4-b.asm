@@ -21,6 +21,7 @@ _puntoB:
     sub eax, [N4]       ; Resta eax(=N3) con N4
     cmp eax, 0          ; Comparar N3 con N4
     je printEqualToZero ; Si N3 == N4, saltar a printEqualToZero
+    jmp done
 
 printEqualToZero:
     mov eax, 4             ; sys_write (número de la llamada al sistema)

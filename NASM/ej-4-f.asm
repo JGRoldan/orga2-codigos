@@ -18,7 +18,8 @@ _puntoF:
     mov eax, [N5]          ; Cargar N5 en EAX
     add eax, [N6]          ; Sumar N6 a EAX
     jp printPar           ; Saltar a printPar si la paridad es par
-
+    jmp done              ; Si no, terminar el programa
+    
 printPar:
     mov eax, 4             ; sys_write
     mov ebx, 1             ; Descriptor de archivo 1 (salida estándar)
