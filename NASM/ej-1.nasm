@@ -1,3 +1,4 @@
+%include "io.inc"
 section .data
     N1 db 45        ; N1 es un entero sin signo de 8 bits 
     N2 db 120       ; N2 es otro entero sin signo de 8 bits 
@@ -14,3 +15,13 @@ section .data
     F1 dd 3.14159   ; F1 es un número en punto flotante de precisión simple 
     
     T db 'Hola, mundo', 0 ; T es una cadena de caracteres ASCII 
+
+section .bss
+
+section .text 
+global CMAIN
+
+CMAIN:
+    mov eax, 1           ; Código de salida del sistema
+    xor ebx, ebx         ; Código de salida 0
+    int 0x80             ; Interrupción del sistema para terminar el programa
