@@ -28,7 +28,7 @@ CMAIN:
     ;No produce desbordamiento
     mov eax, 4             ; sys_write (número de la llamada al sistema)
     mov ebx, 1             ; Descriptor de archivo 1 (salida estándar)
-    mov ecx, msgNoOverflow   ; Cargar la dirección de msgOverflow en ecx
+    mov ecx, msgNoOverflow   ; Cargar la dirección de msgNoOverflow en ecx
     mov edx, msgNoOverflowLen; Longitud del mensaje en edx
     int 0x80               ; Llamada al sistema (sys_write)
     jmp done

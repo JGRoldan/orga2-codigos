@@ -1,26 +1,26 @@
+%include "io.inc"
 section .data
     N1 dd 5               ; Valor de N1
     N2 dd 3               ; Valor de N2
     N3 dd 10              ; Valor de N3
     N4 dd 10              ; Valor de N4
-    N5 dd 0xEFFFFFFF      ; Valor de N5 (cercano al máximo valor de 32 bits)
-    N6 dd 1               ; Valor de N6
+    N5 dd -1              ; Valor de N5
 
     ;Strings
     msgGreater db "N1 es mayor que N2",0x0A, 0 			;0x0A = LF (new line)
     msgZero db "El resultado de N3 - N4 es cero",0x0A, 0
-    msgOverflow db "N5 + N6 produce desbordamiento",0x0A, 0
+    msgNegative db "N5 es negativo",0x0A, 0
 
     ;length de cadenas
     msgGreaterLen equ $-msgGreater
     msgZeroLen equ $-msgZero
     msgOverflowLen equ $-msgOverflow 
-
+    msgNegativeLen equ $-msgNegative
 
 section .text
-    global _start
+    global CMAIN
 
-_start:
+CMAIN:
 
 _puntoA:
     ; a. Si N1 es mayor que N2
@@ -35,14 +35,12 @@ _puntoB:
     cmp eax, 0          ; Comparar N3 con N4
     je printEqualToZero ; Si N3 == N4, saltar a printEqualToZero
 
-_puntoC:
-   ; c. Si N5 + N6 produce desbordamiento.
-    mov eax, [N5]         ; Cargar N5 en EAX
-    mov ebx, [N6]         ; Cargar N6 en EBX
-    add eax, ebx          ; Sumar eax (N5) con ebx (N6)
-    jo printOverflow      ; Si N5+N6 = overflow, saltar a printOverflow
-
-    jmp done
+_puntoD:
+    ; d. Si N5 es negativo
+    mov eax, [N5]       ; Cargar N5 en EAX
+    cmp eax, 0          ; Comparar N5 con 0
+    jl printNegative    ; Si N5 < 0, saltar a printNegative
+    jmp done            ; Si no se cumple ninguna condición, terminar el programa
 
 printGreater:
     mov eax, 4             ; sys_write (número de la llamada al sistema)
@@ -60,13 +58,13 @@ printEqualToZero:
     int 0x80               ; Llamada al sistema (sys_write)
     jmp done               ; Retorna a _puntoB
 
-printOverflow:
+printNegative:
     mov eax, 4             ; sys_write (número de la llamada al sistema)
     mov ebx, 1             ; Descriptor de archivo 1 (salida estándar)
-    mov ecx, msgOverflow   ; Cargar la dirección de msgOverflow en ecx
-    mov edx, msgOverflowLen; Longitud del mensaje en edx
+    mov ecx, msgNegative   ; Cargar la dirección de msgNegative en ecx
+    mov edx, msgNegativeLen; Longitud del mensaje en edx
     int 0x80               ; Llamada al sistema (sys_write)
-    jmp done               ; Retorna a _puntoC
+    jmp done               ; Retorna a _puntoD
 
 done:
     ; Salir del programa
