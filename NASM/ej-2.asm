@@ -1,9 +1,10 @@
+%include "io.inc"
 section .data
-    N1 db 45                ; N1 es un entero sin signo de 8 bits
-    N2 db 120               ; N2 es otro entero sin signo de 8 bits
+    N1 db 48                ; N1 es un entero sin signo de 8 bits
+    N2 db 1               ; N2 es otro entero sin signo de 8 bits
     
-    N3 dw -2000             ; N3 es un entero de 16 bits con signo
-    N4 dw 30000             ; N4 es un entero de 16 bits con signo
+    N3 dw 128             ; N3 es un entero de 16 bits con signo
+    N4 dw 165             ; N4 es un entero de 16 bits con signo
     
     N5 dd 100000            ; N5 es un entero de 32 bits
     N6 dd -500000           ; N6 es un entero de 32 bits
@@ -11,24 +12,26 @@ section .data
     N7 dq 123456789012345678 ; N7 es un entero de 64 bits
     N8 dq 987654321098765432 ; N8 es otro entero de 64 bits
 
-    ; Espacio para almacenar los resultados
-    resultadoN1N2 db 0         ; Para el resultado de N1 + N2 (8 bits)
-    resultadoN3N4 dw 0         ; Para el resultado de N3 - N4 (16 bits)
-    resultadoN1N2Mul dw 0      ; Para el resultado de N1 * N2 (16 bits, ya que es 8 bits * 8 bits)
-    cocienteN3N4 dw 0          ; Cociente de la división N3 / N4
-    restoN3N4 dw 0             ; Resto de la división N3 / N4
-    resultadoN5N6 dd 0         ; Para el resultado de N5 + N6 (32 bits)
-    resultadoN7N8 dq 0         ; Para el resultado de N7 + N8 (64 bits, usando registros de 32 bits)
-    cocienteN5N6 dd 0          ; Cociente de la división N5 / N6
-    restoN5N6 dd 0             ; Resto de la división N5 / N6
-
 section .bss
-    ; No es necesario reservar espacio aquí, lo hacemos en .data.
+        ; Espacio para almacenar los resultados
+        resultadoN1N2 resb 1      ; Para el resultado de N1 + N2 (8 bits)
+        resultadoN3N4 resw 1      ; Para el resultado de N3 - N4 (16 bits)
+        resultadoN1N2Mul resw 1   ; Para el resultado de N1 * N2 (16 bits)
+        cocienteN3N4 resw 1       ; Cociente de la división N3 / N4
+        restoN3N4 resw 1          ; Resto de la división N3 / N4
+        resultadoN5N6 resd 1      ; Para el resultado de N5 + N6 (32 bits)
+        resultadoN7N8 resq 1      ; Para el resultado de N7 + N8 (64 bits)
+        cocienteN5N6 resd 1       ; Cociente de la división N5 / N6
+        restoN5N6 resd 1          ; Resto de la división N5 / N6
+
+        ;CMAIN tiene que estar para ejecutar en SASM. Si se ejecuta en la consola =>
+        ; 1- CMAIN = _start
+        ; 2- Borrar %include "io.inc"
 
 section .text
-    global _start
+    global CMAIN
 
-_start:
+CMAIN:
 
     ; a. N1 + N2
     mov al, [N1]        ; Cargar el valor de N1 en el registro AL (8 bits)
@@ -75,5 +78,6 @@ _start:
     mov [restoN5N6], edx    ; Guardar el resto
 
     ; Terminar el programa
-    mov eax, 1          ; Código de salida del sistema
-    int 0x80            ; Llamada al sistema para salir
+    mov eax,1 ; Código de salida del sistema
+    mov ebx,0 ;código de salida "0" (no error)
+    int 0x80  ; Llamada al sistema para salir
