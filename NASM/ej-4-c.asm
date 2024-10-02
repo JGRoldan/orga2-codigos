@@ -20,6 +20,8 @@ section .text
     global CMAIN
 
 CMAIN:
+    mov ebp, esp; for correct debugging
+_puntoC:
    ; c. Si N5 + N6 produce desbordamiento.
     mov eax, [N5]         ; Cargar N5 en EAX
     add eax, [N6]          ; Sumar eax (N5) con ebx (N6)
