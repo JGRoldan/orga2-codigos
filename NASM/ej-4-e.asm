@@ -15,10 +15,9 @@ section .text
 CMAIN:
     mov ebp, esp; for correct debugging
 _puntoE:
-    ; a. Si N1 es mayor que N2
     mov eax, [N7]         ; Cargar N1 en EAX
-    cmp eax, [N8]         ; Comparar N1 con N2
-    jc printCarry       ; Si N1 > N2, saltar a printGreater
+    add eax, [N8]         ; Sumar N8 a EAX (esto ajusta el carry flag si hay carry)
+    jc printCarry         ; Si hay carry, saltar a printCarry
     jmp done              ; Si no se cumple la condición, terminar el programa
 
 printCarry:
