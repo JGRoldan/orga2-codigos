@@ -17,7 +17,7 @@ section .data
     msgNoOverflowLen equ $-msgNoOverflow 
 
 section .text
-    global _start
+    global CMAIN
 
 CMAIN:
    ; c. Si N5 + N6 produce desbordamiento.
